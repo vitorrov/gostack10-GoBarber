@@ -1,0 +1,11 @@
+{
+  "name": "gostack10-GoBarber",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/vitorrov/gostack10-GoBarber.git",
+  "author": "Vitor <vitormr45@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
