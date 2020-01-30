@@ -16,6 +16,7 @@ class UserController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation failed' });
     }
+
     const userExists = await User.findOne({ where: { email: req.body.email } });
 
     if (userExists) {
@@ -23,6 +24,61 @@ class UserController {
     }
 
     const { name, email } = await User.create(req.body);
+
+    return res.json({
+      name,
+      email,
+    });
+  }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      name: Yup.string(),
+      email: Yup.string().email(),
+      oldPassword: Yup.string().min(6),
+      password: Yup.string()
+        .min(6)
+        .when('oldPassword', (oldPassword, field) =>
+          oldPassword ? field.required() : field
+        ),
+      confirmPassword: Yup.string().when('password', (password, field) =>
+        password ? field.required().oneOf([Yup.ref('password')]) : field
+      ),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation failed' });
+    }
+
+    const { email, oldPassword, password_hash, password } = req.body;
+
+    const user = await User.findByPk(req.userId);
+
+    if (email && email !== user.email) {
+      const userExists = await User.findOne({
+        where: { email },
+      });
+
+      if (userExists) {
+        return res.status(400).json({ error: 'Email already registered' });
+      }
+    }
+
+    if (password_hash) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    if (password && !oldPassword) {
+      return res
+        .status(401)
+        .json({ error: 'You need to fill your old password' });
+    }
+
+    if (oldPassword && !(await user.checkPassword(oldPassword))) {
+      return res.status(401).json({ error: 'Password does not match' });
+    }
+
+    const { name } = await user.update(req.body);
 
     return res.json({
       name,
