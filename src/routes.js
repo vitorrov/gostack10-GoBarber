@@ -30,6 +30,7 @@ routes.get('/providers', ProviderController.index); // Mostra todos providers
 
 routes.post('/appointments', AppointmentController.store); // Marcar um horario
 routes.get('/appointments', AppointmentController.index); // Mostrar todos horarios usuario
+routes.delete('/appointments/:id', AppointmentController.delete); // Cancelamento de horario
 
 routes.get('/schedule', isProvider, ScheduleController.index); // Mostra os horarios do provider
 
