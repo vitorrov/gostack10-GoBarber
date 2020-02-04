@@ -10,6 +10,7 @@ import ProviderController from './app/controllers/ProviderController';
 import AppointmentController from './app/controllers/AppointmentController';
 import ScheduleController from './app/controllers/ScheduleController';
 import NotificationController from './app/controllers/NotificationController';
+import AvailableController from './app/controllers/AvailableController';
 
 import authMiddleware from './app/middlewares/auth';
 import isProvider from './app/middlewares/isProvider';
@@ -27,6 +28,7 @@ routes.get('/teste', isProvider); // Rota de testes
 routes.put('/users', authMiddleware, UserController.update); // Alterar dados
 
 routes.get('/providers', ProviderController.index); // Mostra todos providers
+routes.get('/providers/:providerId/available', AvailableController.index);
 
 routes.post('/appointments', AppointmentController.store); // Marcar um horario
 routes.get('/appointments', AppointmentController.index); // Mostrar todos horarios usuario
