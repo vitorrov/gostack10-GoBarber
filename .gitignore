@@ -2,3 +2,4 @@
 tokens.txt
 .DS_Store
 yarn-error.log
+.env
